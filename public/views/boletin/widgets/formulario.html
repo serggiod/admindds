@@ -1,0 +1,499 @@
+<style>
+    .cell{
+        width:220px !important;
+    }
+    .editor{
+        width:220px !important;
+        height:80px;
+        text-align: center;
+    }
+    .btn-width{
+        width:102px !important;
+    }
+</style>
+<div ng-hide="display" class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+        <div class="panel panel-info">
+            <div class="panel-heading clearfix">
+                <span class="pull-left">
+                    BOLETIN LEGISLATIVO
+                </span>
+            </div>
+            <div class="panel-body text-center">
+                <!-- Encabezado. -->
+                <table class="table table-striped table-bordered table-hover table-condensed table-responsive text-center">
+                    <tr>
+                        <td colspan="3">
+                            <h3>&nbsp;</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:300px;">
+                            <img id="jujuypng" src="http://www.legislaturajujuy.gov.ar/imgcdn/jujuy.png" height="100" />
+                            <br/> Legislatura de Jujuy
+                            <br/> Cámara de Diputados
+                            <br/> {{modelo.header.sesion.periodo}}
+                        </td>
+                        <td>
+                            <br/><br/>
+                            <h3>BOLETÍN LEGISLATIVO NRO {{modelo.header.numero}}/{{modelo.header.anio}}</h3>
+                            <h4>Semana desde
+                                <input style="width:100px;border:0px;background-color:#fff;" name="date" ng-model="modelo.header.fecha.desde" ng-disabled="'trur'" data-date-format="dd/MM/yyyy" data-language="es" data-autoclose="true" type="text" bs-datepicker>                                hasta
+                                <input style="width:100px;border:0px;background-color:#fff;" name="date" ng-model="modelo.header.fecha.hasta" ng-disabled="'trur'" data-date-format="dd/MM/yyyy" data-language="es" data-autoclose="true" type="text" bs-datepicker>
+                            </h4>
+                        </td>
+                        <td style="width:300px;">
+                            <img id="argentinapng" src="http://www.legislaturajujuy.gov.ar/imgcdn/argentina.png" height="110" /><br/>
+                            <strong>República Argentina</strong>
+                            <br/> Provincia de Jujuy
+                            <br/> San Salvador de Jujuy
+                            <br/> Gorriti 47
+                            <br/> Telefono: 388 4239200
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Actividad Parlamentaria -->
+        <div class="panel panel-info">
+            <div class="panel body text-center">
+                <h3><u>Actividad Parlamentaria</u></h3>
+            </div>
+        </div>
+
+        <!-- BOLETIN LEGISLATIVO / ENCABEZADOS -->
+        <div class="panel panel-info">
+            <div class="panel-heading"> BOLETIN LEGISLATIVO / ENCABEZADO</div>
+            <div class="panel-body" ng-hide="readonly">
+                <table class="table table-striped table-bordered table-hover table-condensed table-responsive text-center">
+                    <tr>
+                        <td><strong>Periodo Legislativo</strong></td>
+                        <td><strong>Sesión Nº y Tipo</strong></td>
+                        <td><strong>Boletin Legislativo / Titulo</strong></td>
+                        <td><strong>Boletin Legislativo / Semana</strong></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select ng-model="modelo.header.keyPeriodo" ng-disabled="disabled" ng-change="setModelHeaderPeriodo()">
+                                <option ng-repeat="(k,p) in periodosLegislativos" value="{{k}}">{{p.nombre}}</option>   
+                            </select>
+                        </td>
+                        <td>
+                            <select ng-model="modelo.header.keySesion" ng-disabled="disabled" ng-change="setModelHeaderSesion()">
+                                <option ng-repeat="(k,s) in sesionesLegislativas" value="{{k}}">{{s.sesion}}</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="input-group">
+                                <span class="input-group-addon">Nro.</span>
+                                <input type="number" min="1" max="10000" size="3" class="form-control" ng-disabled="disabledHeader" ng-model="modelo.header.numero">
+                                <span class="input-group-addon">/</span>
+                                <input type="number" min="1983" max="2050" size="4" class="form-control" ng-disabled="disabledHeader" ng-model="modelo.header.anio">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-group">
+                                <span class="input-group-addon">Desde</span>
+                                <input style="width:100px;" class="form-control" name="date" size="10" ng-model="modelo.header.fecha.desde" ng-disabled="true" data-date-format="dd-MM-yyyy" data-language="es" data-autoclose="true" type="text" bs-datepicker>
+                                <span class="input-group-addon">Hasta&nbsp;</span>
+                                <input style="width:100px;" class="form-control" name="date" size="10" ng-model="modelo.header.fecha.hasta" ng-disabled="disabledHeader" ng-change="setModelHeaderDesde()" data-date-format="dd-MM-yyyy" data-language="es" data-autoclose="true" type="text"
+                                    data-placement="auto" bs-datepicker>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <table class="table table-striped table-bordered table-hover table-condensed table-responsive text-center">
+                    <tr>
+                        <td><strong>Periodo Legislativo</strong></td>
+                        <td><strong>Año</strong></td>
+                        <td><strong>Sesión Nº y Tipo</strong></td>
+                        <td><strong>Desde</strong></td>
+                        <td><strong>Hasta</strong></td>
+                    </tr>
+                    <tr>
+                        <td>{{modelo.header.sesion.numero}}</td>
+                        <td>{{modelo.header.sesion.fecha.desde.anio}}</td>
+                        <td>{{modelo.header.sesion.nombre}}</td>
+                        <td style="width:354px;">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width:68px !important;">Fecha:</span>
+                                <input ng-model="modelo.header.sesion.fecha.desde.dia" type="number" min="1" max="31" size="2" class="form-control" ng-disabled="true">
+                                <span class="input-group-addon">/</span>
+                                <input ng-model="modelo.header.sesion.fecha.desde.mes" type="number" min="1" max="12" size="2" class="form-control" ng-disabled="true">
+                                <span class="input-group-addon"></span>
+                                <input ng-model="modelo.header.sesion.fecha.desde.anio" type="number" min="1983" max="2050" size="4" class="form-control" ng-disabled="true" style="width:80px !important;">
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width:68px !important;">Hora:</span>
+                                <input ng-model="modelo.header.sesion.fecha.desde.hora" type="number" min="0" max="23" size="2" class="form-control" ng-disabled="true">
+                                <span class="input-group-addon">:</span>
+                                <input ng-model="modelo.header.sesion.fecha.desde.minuto" type="number" min="0" max="59" size="2" class="form-control" ng-disabled="true">
+                                <span class="input-group-addon">:</span>
+                                <input ng-model="modelo.header.sesion.fecha.desde.segundo" type="number" min="0" max="59" size="2" class="form-control" ng-disabled="true" style="width:80px !important;">
+                            </div>
+                        </td>
+                        <td style="width:354px;">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width:68px !important;">Fecha:</span>
+                                <input ng-model="modelo.header.sesion.fecha.hasta.dia" type="number" min="1" max="31" size="2" class="form-control" ng-disabled="disabledHeader">
+                                <span class="input-group-addon">/</span>
+                                <input ng-model="modelo.header.sesion.fecha.hasta.mes" type="number" min="1" max="12" size="2" class="form-control" ng-disabled="true">
+                                <span class="input-group-addon"></span>
+                                <input ng-model="modelo.header.sesion.fecha.hasta.anio" type="number" min="1983" max="2050" size="4" class="form-control" ng-disabled="true" style="width:80px !important;">
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width:68px !important;">Hora:</span>
+                                <input ng-model="modelo.header.sesion.fecha.hasta.hora" type="number" min="0" max="23" size="2" class="form-control" ng-disabled="disabledHeader">
+                                <span class="input-group-addon">:</span>
+                                <input ng-model="modelo.header.sesion.fecha.hasta.minuto" type="number" min="0" max="59" size="2" class="form-control" ng-disabled="disabledHeader">
+                                <span class="input-group-addon">:</span>
+                                <input ng-model="modelo.header.sesion.fecha.hasta.segundo" type="number" min="0" max="59" size="2" class="form-control" ng-disabled="disabledHeader" style="width:80px !important;">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <table class="table table-striped table-bordered table-hover table-condensed table-responsive text-center">
+                    <tr>
+                        <td><strong>Observaciones</strong></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <textarea class="form-control" ng-model="modelo.header.observaciones" ng-disabled="disabledHeader"></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="panel-footer clearfix">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-danger" ng-show="update" ng-click="setModelHeaderEnableHeaderReset()">
+                        <i class="glyphicon glyphicon-edit"></i>
+                        Reiniciar
+                    </button>
+                    <button class="btn btn-primary" ng-show="update" ng-click="setModelHeaderEnableHeader()">      
+                        <i class="glyphicon glyphicon-edit"></i>
+                        Modificar Encabezado
+                    </button>
+                    <button class="btn btn-primary" ng-show="update" ng-click="setModelHeaderSesionUpdate()">      
+                        <i class="glyphicon glyphicon-ok-circle"></i>
+                        Guardar Datos
+                    </button>
+                    <ng-hide ng-hide="readonly">
+                        <button class="btn btn-primary" ng-hide="update" ng-click="setModelHeaderSesionSave()">      
+                                <i class="glyphicon glyphicon-ok-circle"></i>
+                                Guardar Datos
+                        </button>
+                    </ng-hide>
+                    <button class="btn btn-info pull-right" ng-show="btnClose" ng-click="setModelHeaderSesionCancelA()">
+                        <i class="glyphicon glyphicon-remove-circle"></i>
+                        Cerrar
+                    </button>
+                    <button class="btn btn-info pull-right" ng-hide="btnClose" ng-click="setModelHeaderSesionCancelB()">
+                        <i class="glyphicon glyphicon-remove-circle"></i>
+                        Cerrar
+                    </button>
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- Actividad Parlamentaria -->
+        <div class="panel panel-info">
+            <div class="panel-heading text-center" style="color:#000000; background-color:#b6dde8">
+                <h4><strong>NORMATIVAS APROBADAS Y SANCIONADAS</strong></h4>
+            </div>
+            <div class="panel body center">
+
+                <!-- Leyes -->
+                <div class="panel panel-info">
+                    <div class="panel-heading text-center" style="color:#000000; background-color:#daeef3;">
+                        <h5><strong>LEYES</strong></h5>
+                     </div>
+                     <div class="panel body">
+                        <table class="table table-striped table-bordered table-hover table-condensed table-responsive text-center">
+                            <!-- Tabla: Encabezado. -->
+                            <tr ng-show="modelo.body.sancion.leyes.length">
+                                <td class="cell"><h4><strong>Número</strong></h4></td>
+                                <td class="cell"><h4><strong>Expediente</strong></h4></td>
+                                <td class="cell"><h4><strong>Tema</strong></h4></td>
+                                <td class="cell"><h4><strong>Autores</strong></h4></td>
+                                <td class="cell"><h4><strong>Observaciones</strong></h4></td>
+                                <td ng-hide="readonly" class="btn-width"><h4><strong>Acciones</strong></h4></td>
+                            </tr>
+                            <!-- Tabla: Contenido. -->
+                            <tr ng-repeat="(k,d) in modelo.body.sancion.leyes">
+                                
+                                <td ng-if="d.agregado==true && readonly==false"><textarea form="{{d.expediente}}" class="editor" maxlength="10"  required ng-model="d.numero"     pattern="[0-9 ]{1,10}"></textarea></td>
+                                <td ng-if="d.agregado==true && readonly==true" ng-bind="d.numero"></td>
+                                <td ng-if="d.agregado==false" ng-bind="d.numero"></td>
+                                
+                                <td ng-if="d.agregado==true && readonly==false"><textarea form="{{d.expediente}}" class="editor" maxlength="15"  required ng-model="d.expediente" pattern="([0-9A-Za-z.\-\+\(\)]{5,13})(-|/)([0-9M]{1,2})"></textarea></td>
+                                <td ng-if="d.agregado==true && readonly==true" ng-bind="d.expediente"></td>
+                                <td ng-if="d.agregado==false" ng-bind="d.expediente"></td>
+                                
+                                <td ng-if="d.agregado==true && readonly==false"><textarea form="{{d.expediente}}" class="editor" maxlength="256" required ng-model="d.tema"       pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"></textarea></td>
+                                <td ng-if="d.agregado==true && readonly==true" ng-bind="d.tema"></td>
+                                <td ng-if="d.agregado==false" ng-bind="d.tema"></td>
+                                
+                                <td ng-if="d.agregado==true && readonly==false"><textarea form="{{d.expediente}}" class="editor" maxlength="256" required ng-model="d.autores"    pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"></textarea></td>
+                                <td ng-if="d.agregado==true && readonly==true" ng-bind="d.autores"></td>
+                                <td ng-if="d.agregado==false" ng-bind="d.autores"></td>
+
+                                <td ng-if="readonly==false"><textarea form="{{d.expediente}}" ng-model="d.observaciones" class="editor" maxlength="256" pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.-]{1,256}"></textarea></td>
+                                <td ng-if="readonly==true" ng-bind="d.observaciones"></td>
+
+                                <td ng-hide="readonly" class="btn-width">
+                                    <form id="{{d.expediente}}" name="{{d.expediente}}" ng-submit="sancionActualizar(k,'l')">
+                                        <div ng-if="d.agregado==false" class="btn-group">
+                                            <button class="btn btn-primary btn-width" type="submit">
+                                                <i class="glyphicon glyphicon-remove-circle"></i> Actualizar
+                                            </button>
+                                            <button class="btn btn-danger btn-width" ng-click="sancionRemover(k,'l')" type="button">
+                                                <i class="glyphicon glyphicon-remove-circle"></i> Remover
+                                            </button>
+                                        </div>
+                                        <div ng-if="d.agregado==true" class="btn-group">
+                                            <button class="btn btn-primary btn-width" type="submit">
+                                                <i class="glyphicon glyphicon-remove-circle"></i> Actualizar
+                                            </button>
+                                            <button class="btn btn-danger btn-width" ng-click="sancionRemover(k,'l')" type="button">
+                                                <i class="glyphicon glyphicon-remove-circle"></i> Remover
+                                            </button>
+                                        
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
+                            <!-- Tabla: Subformulario. -->
+                            <tr ng-if="readonly==false" ng-show="viewLey">
+                                <td><textarea form="formLey" class="editor" ng-model="formulario.numero"        pattern="[0-9]{1,10}"                                    title="Ingrese solo números."      required maxlength="10" ></textarea></td>
+                                <td><textarea form="formLey" class="editor" ng-model="formulario.expediente"    pattern="[0-9A-Za-z.+()\-]{5,15}" title="Ingrese el expediente."     required maxlength="15" ></textarea></td>
+                                <td><textarea form="formLey" class="editor" ng-model="formulario.tema"          pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"     title="Ingrese el tema."           required maxlength="256"></textarea></td>
+                                <td><textarea form="formLey" class="editor" ng-model="formulario.autores"       pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"     title="Ingrese el autor."          required maxlength="256"></textarea></td>
+                                <td><textarea form="formLey" class="editor" ng-model="formulario.observaciones" pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"     title="Ingrese las observaciones." maxlength="256"></textarea></td>
+                                <td ng-hide="readonly" class="btn-width">
+                                    <form id="formLey" name="formLey" ng-submit="sancionAgregadoGuardar('l','formLey');">
+                                        <button type="submit" class="btn btn-success btn-width">
+                                            <i class="glyphicon glyphicon-ok-circle"></i>
+                                            Guardar
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-width" ng-click="viewLey=false">
+                                            <i class="glyphicon glyphicon-remove-circle"></i>
+                                            Cancelar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <!-- Tabla: Botón Abrir Subformulario. -->
+                            <tr ng-hide="viewLey">
+                                <td colspan="5"></td>
+                                <td ng-hide="readonly" class="btn-width">
+                                    <button type="button" class="btn btn-primary btn-width" ng-click="viewLey=true">
+                                        <i class="glyphicon glyphicon-plus-sign"></i>
+                                        Agregar
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Resoluciones -->
+                <div class="panel panel-info">
+                    <div class="panel-heading text-center" style="color:#000000; background-color:#daeef3;">
+                        <h5><strong>RESOLUCIONES</strong></h5>
+                     </div>
+                     <div class="panel body">
+                        <table class="table table-striped table-bordered table-hover table-condensed table-responsive text-center">
+                            <!-- Tabla: Encabezado. -->
+                            <tr ng-show="modelo.body.sancion.resoluciones.length">
+                                <td class="cell"><h4><strong>Número</strong></h4></td>
+                                <td class="cell"><h4><strong>Expediente</strong></h4></td>
+                                <td class="cell"><h4><strong>Tema</strong></h4></td>
+                                <td class="cell"><h4><strong>Autores</strong></h4></td>
+                                <td class="cell"><h4><strong>Observaciones</strong></h4></td>
+                                <td ng-hide="readonly" class="btn-width"><h4><strong>Acciones</strong></h4></td>
+                            </tr>
+                            <!-- Tabla: Contenido. -->
+                            <tr ng-repeat="(k,d) in modelo.body.sancion.resoluciones">
+                                
+                                <td ng-if="d.agregado==true && readonly==false"><textarea form="{{d.expediente}}" class="editor" maxlength="10"  required ng-model="d.numero"     pattern="[0-9 ]{1,10}"></textarea></td>
+                                <td ng-if="d.agregado==true && readonly==true" ng-bind="d.numero"></td>
+                                <td ng-if="d.agregado==false" ng-bind="d.numero"></td>
+                                
+                                <td ng-if="d.agregado==true && readonly==false"><textarea form="{{d.expediente}}" class="editor" maxlength="15"  required ng-model="d.expediente" pattern="([0-9A-Za-z.\-\+\(\)]{5,13})(-|/)([0-9M]{1,2})"></textarea></td>
+                                <td ng-if="d.agregado==true && readonly==true" ng-bind="d.expediente"></td>
+                                <td ng-if="d.agregado==false" ng-bind="d.expediente"></td>
+                                
+                                <td ng-if="d.agregado==true && readonly==false"><textarea form="{{d.expediente}}" class="editor" maxlength="256" required ng-model="d.tema"       pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"></textarea></td>
+                                <td ng-if="d.agregado==true && readonly==true" ng-bind="d.tema"></td>
+                                <td ng-if="d.agregado==false" ng-bind="d.tema"></td>
+                                
+                                <td ng-if="d.agregado==true && readonly==false"><textarea form="{{d.expediente}}" class="editor" maxlength="256" required ng-model="d.autores"    pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"></textarea></td>
+                                <td ng-if="d.agregado==true && readonly==true" ng-bind="d.autores"></td>
+                                <td ng-if="d.agregado==false" ng-bind="d.autores"></td>
+
+                                <td ng-if="readonly==false"><textarea form="{{d.expediente}}" ng-model="d.observaciones" class="editor" maxlength="256" pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.-]{1,256}"></textarea></td>
+                                <td ng-if="readonly==true" ng-bind="d.observaciones"></td>
+
+                                <td ng-hide="readonly" class="btn-width">
+                                    <form id="{{d.expediente}}" name="{{d.expediente}}" ng-submit="sancionActualizar(k,'r')">
+                                        <div ng-if="d.agregado==false" class="btn-group">
+                                            <button class="btn btn-primary btn-width" type="submit">
+                                                <i class="glyphicon glyphicon-remove-circle"></i> Actualizar
+                                            </button>
+                                            <button class="btn btn-danger btn-width" ng-click="sancionRemover(k,'r')" type="button">
+                                                <i class="glyphicon glyphicon-remove-circle"></i> Remover
+                                            </button>
+                                        </div>
+                                        <div ng-if="d.agregado==true" class="btn-group">
+                                            <button class="btn btn-primary btn-width" type="submit">
+                                                <i class="glyphicon glyphicon-remove-circle"></i> Actualizar
+                                            </button>
+                                            <button class="btn btn-danger btn-width" ng-click="sancionRemover(k,'r')" type="button">
+                                                <i class="glyphicon glyphicon-remove-circle"></i> Remover
+                                            </button>
+                                        
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
+                            <!-- Tabla: Subformulario. -->
+                            <tr ng-if="readonly==false" ng-show="viewRes">
+                                <td><textarea form="formRes" class="editor" ng-model="formulario.numero"        pattern="[0-9]{1,10}"                                    title="Ingrese solo números."      required maxlength="10" ></textarea></td>
+                                <td><textarea form="formRes" class="editor" ng-model="formulario.expediente"    pattern="[0-9A-Za-z.+()\-]{5,15}" title="Ingrese el expediente."     required maxlength="15" ></textarea></td>
+                                <td><textarea form="formRes" class="editor" ng-model="formulario.tema"          pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"     title="Ingrese el tema."           required maxlength="256"></textarea></td>
+                                <td><textarea form="formRes" class="editor" ng-model="formulario.autores"       pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"     title="Ingrese el autor."          required maxlength="256"></textarea></td>
+                                <td><textarea form="formRes" class="editor" ng-model="formulario.observaciones" pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"     title="Ingrese las observaciones." maxlength="256"></textarea></td>
+                                <td ng-hide="readonly" class="btn-width">
+                                    <form id="formRes" name="formRes" ng-submit="sancionAgregadoGuardar('r','formRes');">
+                                        <button type="submit" class="btn btn-success btn-width">
+                                            <i class="glyphicon glyphicon-ok-circle"></i>
+                                            Guardar
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-width" ng-click="viewRes=false">
+                                            <i class="glyphicon glyphicon-remove-circle"></i>
+                                            Cancelar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <!-- Tabla: Botón Abrir Subformulario. -->
+                            <tr ng-hide="viewRes">
+                                <td colspan="5"></td>
+                                <td ng-hide="readonly" class="btn-width">
+                                    <button type="button" class="btn btn-primary btn-width" ng-click="viewRes=true">
+                                        <i class="glyphicon glyphicon-plus-sign"></i>
+                                        Agregar
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Declaraciones -->
+                <div class="panel panel-info">
+                    <div class="panel-heading text-center" style="color:#000000; background-color:#daeef3;">
+                        <h5><strong>DECLARACIONES</strong></h5>
+                     </div>
+                     <div class="panel body">
+                        <table class="table table-striped table-bordered table-hover table-condensed table-responsive text-center">
+                            <!-- Tabla: Encabezado. -->
+                            <tr ng-show="modelo.body.sancion.declaraciones.length">
+                                <td class="cell"><h4><strong>Número</strong></h4></td>
+                                <td class="cell"><h4><strong>Expediente</strong></h4></td>
+                                <td class="cell"><h4><strong>Tema</strong></h4></td>
+                                <td class="cell"><h4><strong>Autores</strong></h4></td>
+                                <td class="cell"><h4><strong>Observaciones</strong></h4></td>
+                                <td ng-hide="readonly" class="btn-width"><h4><strong>Acciones</strong></h4></td>
+                            </tr>
+                            <!-- Tabla: Contenido. -->
+                            <tr ng-repeat="(k,d) in modelo.body.sancion.declaraciones">
+                                
+                                <td ng-if="d.agregado==true && readonly==false"><textarea form="{{d.expediente}}" class="editor" maxlength="10"  required ng-model="d.numero"     pattern="[0-9 ]{1,10}"></textarea></td>
+                                <td ng-if="d.agregado==true && readonly==true" ng-bind="d.numero"></td>
+                                <td ng-if="d.agregado==false" ng-bind="d.numero"></td>
+                                
+                                <td ng-if="d.agregado==true && readonly==false"><textarea form="{{d.expediente}}" class="editor" maxlength="15"  required ng-model="d.expediente" pattern="([0-9A-Za-z.\-\+\(\)]{5,13})(-|/)([0-9M]{1,2})"></textarea></td>
+                                <td ng-if="d.agregado==true && readonly==true" ng-bind="d.expediente"></td>
+                                <td ng-if="d.agregado==false" ng-bind="d.expediente"></td>
+                                
+                                <td ng-if="d.agregado==true && readonly==false"><textarea form="{{d.expediente}}" class="editor" maxlength="256" required ng-model="d.tema"       pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"></textarea></td>
+                                <td ng-if="d.agregado==true && readonly==true" ng-bind="d.tema"></td>
+                                <td ng-if="d.agregado==false" ng-bind="d.tema"></td>
+                                
+                                <td ng-if="d.agregado==true && readonly==false"><textarea form="{{d.expediente}}" class="editor" maxlength="256" required ng-model="d.autores"    pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"></textarea></td>
+                                <td ng-if="d.agregado==true && readonly==true" ng-bind="d.autores"></td>
+                                <td ng-if="d.agregado==false" ng-bind="d.autores"></td>
+
+                                <td ng-if="readonly==false"><textarea form="{{d.expediente}}" ng-model="d.observaciones" class="editor" maxlength="256" pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.-]{1,256}"></textarea></td>
+                                <td ng-if="readonly==true" ng-bind="d.observaciones"></td>
+
+                                <td ng-hide="readonly" class="btn-width">
+                                    <form id="{{d.expediente}}" name="{{d.expediente}}" ng-submit="sancionActualizar(k,'d')">
+                                        <div ng-if="d.agregado==false" class="btn-group">
+                                            <button class="btn btn-primary btn-width" type="submit">
+                                                <i class="glyphicon glyphicon-remove-circle"></i> Actualizar
+                                            </button>
+                                            <button class="btn btn-danger btn-width" ng-click="sancionRemover(k,'d')" type="button">
+                                                <i class="glyphicon glyphicon-remove-circle"></i> Remover
+                                            </button>
+                                        </div>
+                                        <div ng-if="d.agregado==true" class="btn-group">
+                                            <button class="btn btn-primary btn-width" type="submit">
+                                                <i class="glyphicon glyphicon-remove-circle"></i> Actualizar
+                                            </button>
+                                            <button class="btn btn-danger btn-width" ng-click="sancionRemover(k,'d')" type="button">
+                                                <i class="glyphicon glyphicon-remove-circle"></i> Remover
+                                            </button>
+                                        
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
+                            <!-- Tabla: Subformulario. -->
+                            <tr ng-if="readonly==false" ng-show="viewDec">
+                                <td><textarea form="formDec" class="editor" ng-model="formulario.numero"        pattern="[0-9]{1,10}"                                    title="Ingrese solo números."      required maxlength="10" ></textarea></td>
+                                <td><textarea form="formDec" class="editor" ng-model="formulario.expediente"    pattern="[0-9A-Za-z.+()\-]{5,15}" title="Ingrese el expediente."     required maxlength="15" ></textarea></td>
+                                <td><textarea form="formDec" class="editor" ng-model="formulario.tema"          pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"     title="Ingrese el tema."           required maxlength="256"></textarea></td>
+                                <td><textarea form="formDec" class="editor" ng-model="formulario.autores"       pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"     title="Ingrese el autor."          required maxlength="256"></textarea></td>
+                                <td><textarea form="formDec" class="editor" ng-model="formulario.observaciones" pattern="[ a-zA-Z0-9áéíóúÁÉÍÓÚñÑ:;,.°ºª/()-]{1,256}"     title="Ingrese las observaciones." maxlength="256"></textarea></td>
+                                <td ng-hide="readonly" class="btn-width">
+                                    <form id="formDec" name="formDec" ng-submit="sancionAgregadoGuardar('d','formDec');">
+                                        <button type="submit" class="btn btn-success btn-width">
+                                            <i class="glyphicon glyphicon-ok-circle"></i>
+                                            Guardar
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-width" ng-click="viewDec=false">
+                                            <i class="glyphicon glyphicon-remove-circle"></i>
+                                            Cancelar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <!-- Tabla: Botón Abrir Subformulario. -->
+                            <tr ng-hide="viewDec">
+                                <td colspan="5"></td>
+                                <td ng-hide="readonly" class="btn-width">
+                                    <button type="button" class="btn btn-primary btn-width" ng-click="viewDec=true">
+                                        <i class="glyphicon glyphicon-plus-sign"></i>
+                                        Agregar
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</div>
+</div>

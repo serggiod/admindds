@@ -1,0 +1,41 @@
+<style>
+    .visualizar .modal-dialog {
+        width: 100%;
+    }
+</style>
+
+<!-- Archivos -->
+<div class="input-field">
+    <div class="input-group-addon"><strong>ARCHIVOS</strong></div>
+</div>
+
+<button ng-click="formularios.formulario.upload()" ng-hide="formularios.formulario.readonly" class="btn btn-info" type="button">
+    Subir Archivo
+</button>
+
+<input id="archivos" type="file" lang="es" class="btn btn-success" style="visibility:hidden;" accept="application/pdf|application/x-pdf|application/acrobat|applications/vnd.pdf|text/pdf|text/x-pdf" />
+
+
+<!-- Display to show files -->
+<table class="table table-striped table-hover table-bordered table-responsive text-center">
+    <tr>
+
+        <td style="width:40px;"><strong>ID</strong></td>
+        <td><strong>ARCHIVO</strong></td>
+        <td style="width:80px;"><strong>ACCIONES</strong></td>
+    </tr>
+    <tr ng-repeat="(k,a) in modelo.archivos">
+        <td>{{a.id}}</td>
+        <td>
+            <button type="button" class="btn btn-info" ng-click="formularios.formulario.visualizar(k)">
+                <i class="glyphicon glyphicon-eye-open"></i>
+                Visualizar
+            </button>
+        </td>
+        <td>
+            <button ng-click="formularios.formulario.delete(k)" ng-hide="formularios.formulario.readonly" class="btn btn-danger btn-xs" alt="Eliminar Archivo" type="button">
+                <i class="glyphicon glyphicon-minus"></i>
+            </button>
+        </td>
+    </tr>
+</table>

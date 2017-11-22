@@ -1,0 +1,73 @@
+<div ng-show="display" class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title text-capitalize">
+                    FORMULARIO / Boletin / Lista
+                </h4>
+            </div>
+            <div class="panel-body">
+                <button ng-click="nuevo()" class="btn btn-success">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    Boletin
+                </button>
+                <div class="primary text-left" style="color:#ffffff;background-color:#286090;">
+                    <em style="padding-left:20px;">Filtros</em>
+                </div>
+                <table class="table table-striped table-hover table-bordered table-responsive text-center">
+
+                    <!-- Filtros. -->
+                    <tr style="border-bottom:2px solid #286090;">
+                        <th><input type="text" class="form-control" placeholder="NUMERO"  ng-model="fnumero"></th>
+                        <th><input type="text" class="form-control" placeholder="PERIODO" ng-model="fperiodo"></th>
+                        <th><input type="text" class="form-control" placeholder="SESION"  ng-model="fsesion"></th>
+                        <th><input type="text" class="form-control" placeholder="TIPO"    ng-model="ftipo"></th>
+                        <th><input type="text" class="form-control" placeholder="DESDE"   ng-model="fdesde"></th>
+                        <th><input type="text" class="form-control" placeholder="HASTA"   ng-model="fhasta"></th>
+                        <th></th>
+                    </tr>
+                    
+                    <!-- Encabezados. -->
+                    <tr>
+                        <td><strong>NUMERO</strong></td>
+                        <td><strong>PERIODO</strong></td>
+                        <td><strong>SESION</strong></td>
+                        <td><strong>TIPO</strong></td>
+                        <td><strong>DESDE</strong></td>
+                        <td><strong>HASTA</strong></td>
+                        <td style="width:150px;"><strong>ACCIONES</strong></td>
+                    </tr>
+
+                    <!-- Contenido -->
+                    <tr ng-repeat="(k,l) in lista | filter:{id:fid,numero:fnumero,periodo:fperiodo,sesion:fsesion,tipo:ftipo,desde:fdesde,hasta:fhasta}">
+                        <td ng-bind="l.numero"></td>
+                        <td ng-bind="l.periodo"></td>
+                        <td ng-bind="l.sesion"></td>
+                        <td ng-bind="l.tipo"></td>
+                        <td ng-bind="l.desde"></td>
+                        <td ng-bind="l.hasta"></td>
+                        <td>
+                            <button ng-click="btnVisualizar(k)" class="btn btn-primary btn-xs" type="button">
+                                <i class="glyphicon glyphicon-eye-open"></i>
+                            </button>
+                            <button ng-click="btnModificar(k)" class="btn btn-primary btn-xs" type="button">
+                                <i class="glyphicon glyphicon-pencil"></i>
+                            </button>
+                            <button ng-click="btnPdfDownload(k)" class="btn btn-info btn-xs" type="button">
+                                    <i class="glyphicon glyphicon-book"></i>
+                                </button>
+                            <button ng-click="btnEliminar(k)" class="btn btn-danger btn-xs" type="button">
+                                <i class="glyphicon glyphicon-minus"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+            <div class="panel-footer">
+                &nbsp;
+            </div>
+        </div>
+    </div>
+</div>
